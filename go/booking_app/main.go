@@ -1,77 +1,70 @@
 package main
 
-import "fmt" //format package
+import (
+	"fmt" //format package
+	"strings"
+)
 
-//which line executes starts
+// which line executes starts
 func main() {
 
-	//variable declaration if we don't use it, it will give error
-	var conferenceName = "Go Conference"
-	//alternative way to declare variable
-	conferenceDate := "2021-12-01"
+	conferenceName := "Go Conference"
+	const conferenceTickets int = 50
+	var remainingTickets uint = 50
+	bookings := []string{}
 
-	//variable declaration with value that can't be changed
-	const conferenceTickets int = 50  
-	//setting the type of the variable ensures that the variable can only store the value of that type
-	var remainingTickets int = 50
-	//only one main function is allowed
+	fmt.Printf("Welcome to %v booking application \n", conferenceName)
+	fmt.Printf("We have %v tickets and %v are still available \n", conferenceTickets, remainingTickets)
+	fmt.Println("Get your ticket now!")
 
-	fmt.Printf("conferenceTickets is %T, remainingTickets is %T, conferenceName is %T\n", conferenceTickets, remainingTickets, conferenceName)
+	for {
+		var firstName string
+		var lastName string
+		var email string
+		var userTickets uint
 
-	//space gets automatically added between the strings and variables
-	fmt.Printf("Welcome to %v booking application\n", conferenceName) 
-	//%v is a placeholder for the variable
-	fmt.Printf("We have total of %v tickets and %v tickets are remaining.\n", conferenceTickets, remainingTickets) 
-	//fmt.Printf is used to format the string	
-	fmt.Printf("Get your tickets here to attend on %v\n", conferenceDate)	
+		fmt.Println("Enter your first name")
+		fmt.Scanln(&firstName)
 
-	//array declaration with size of 50
-	// var bookings = [50]string{}
+		fmt.Println("Enter your last name")
+		fmt.Scanln(&lastName)
 
-	var bookings [50]string
+		fmt.Println("Enter your email")
+		fmt.Scanln(&email)
 
-	//slices vs array dynamic sized array which can grow or shrink
-	var books []string
-	books = append(books, "hello")
+		fmt.Println("How many tickets do you want to book?")
+		fmt.Scanln(&userTickets)
 
-	var firstName string
-	var lastName string
-	var email string
-	var userTickets int
-	//ask user to enter the name
-	//& is used to get the address of the variable pointer
-	fmt.Print("Enter your first name: ")
-	fmt.Scan(&firstName)//assign the value to the variable memory location
+		if userTickets <= remainingTickets {
 
-	fmt.Print("Enter your last name: ")
-	fmt.Scan(&lastName)
-
-	fmt.Print("Enter your email: ")
-	fmt.Scan(&email)
-
-	fmt.Println("Enter the number of tickets you want to book:")
-	fmt.Scan(&userTickets)
-
-	// fmt.Print(remainingTickets)
-	// fmt.Print(&remainingTickets)
-
-	remainingTickets = remainingTickets - userTickets
-
-	bookings[0] = firstName + " " + lastName
-
-	fmt.Printf("Whole array is: %v \n", bookings)
-	fmt.Printf("first element of array is: %v \n", bookings[0])
-	fmt.Printf("type elements of array is: %T \n", bookings)
-	fmt.Printf("length of array is: %v \n", len(bookings))
+			remainingTickets = remainingTickets - userTickets
+			bookings = append(bookings, firstName+" "+lastName)
 	
-	fmt.Printf("User %v has booked %v tickets & you will reciewve email at %v  \n", firstName, userTickets, email)
-	fmt.Printf("Remaining tickets are %v\n", remainingTickets)
-
-	fmt.Printf("Wholeslice is: %v \n", books)
-
+			fmt.Printf("Thank you %v %v, you have successfully booked %v tickets for the %v conference.You will recieve confirmation at %v \n", firstName, lastName, userTickets, conferenceName, email)
+			fmt.Printf("We have %v tickets remaining \n", remainingTickets)
 	
+			firstNames := []string{}
 	
+			for _, booking := range bookings {
+				var names = strings.Fields(booking)
+				fmt.Printf("The first name of the booking is %v \n", names[0])
+				firstNames = append(firstNames, names[0])
+			}
+	
+			fmt.Printf("The first names of all the bookings are %v \n", firstNames)
+	
+			noTicketsRemaining := remainingTickets == 0
+	
+			if noTicketsRemaining {
+				fmt.Println("We are sold out!")
+				break
+			}
+		} else {
+			fmt.Printf("Sorry, we only have %v tickets remaining \n", remainingTickets)
+			
+		}
+
+
+	}
 
 }
-
-
