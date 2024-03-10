@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt" //format package
-
-	
+	"time"
+	"sync"
 
 	//importing the helper package
 	"booking-app/helper"
@@ -25,6 +25,8 @@ type UserData struct {
 
 }
 
+var wg = sync.WaitGroup{}
+
 // which line executes starts
 func main() {
 
@@ -39,6 +41,8 @@ func main() {
 		if isValidName && isValidEmail && isValidTicketsNumber {
 
 			bookTickets(userTickets, firstName, lastName, email)
+			wg.Add(1)
+			go sendTicket(userTickets, firstName, lastName, email)
 
 			//call the function print firstnames
 			FirstNames := getFirstNames()
@@ -62,16 +66,8 @@ func main() {
 		}
 
 	}
-	city := "New York"
+	wg.Wait()
 
-	switch city {
-	case "New York", "NYC":
-		fmt.Println("Welcome to New York")
-	case "London":
-		fmt.Println("Welcome to London")
-	default:
-		fmt.Println("Where are you?")
-	}
 
 }
 
@@ -126,4 +122,13 @@ func bookTickets(userTickets uint, firstName string, lastName string, email stri
 
 	fmt.Printf("Thank you %v %v, you have successfully booked %v tickets for the %v conference.You will recieve confirmation at %v \n", firstName, lastName, userTickets, conferenceName, email)
 	fmt.Printf("We have %v tickets remaining \n", remainingTickets)
+}
+
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	time.Sleep(10 * time.Second)
+	var ticket = fmt.Sprintf("Sending %v tickets to %v %v \n", userTickets, firstName, lastName )
+	fmt.Println("#################")
+	fmt.Printf("Sending ticket:\n %v at email address %v \n", ticket,email)
+	fmt.Println("#################")
+	wg.Done()
 }
