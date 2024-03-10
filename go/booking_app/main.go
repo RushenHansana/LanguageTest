@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt" //format package
-	"strconv"
+
 	
 
 	//importing the helper package
@@ -14,7 +14,16 @@ const conferenceTickets int = 50
 
 var conferenceName = "Go Conference"
 var remainingTickets uint = 50
-var bookings = make([]map[string]string, 0) //initialize an empty slice of map
+var bookings = make([]UserData, 0) //initialize an empty slice of map
+
+//create a custom data type
+type UserData struct {
+	firstName string
+	lastName  string
+	email     string
+	numberOfTickets   uint
+
+}
 
 // which line executes starts
 func main() {
@@ -77,7 +86,7 @@ func getFirstNames() []string {
 	firstNames := []string{}
 
 	for _, booking := range bookings {
-		firstNames = append(firstNames, booking["firstName"])
+		firstNames = append(firstNames, booking.firstName)
 	}
 
 	return firstNames
@@ -104,11 +113,13 @@ func bookTickets(userTickets uint, firstName string, lastName string, email stri
 	remainingTickets = remainingTickets - userTickets
 
 	//create a map for a user we cannot use mixed data types in a map
-	var userData = make(map[string]string)
-	userData["firstName"] = firstName
-	userData["lastName"] = lastName
-	userData["email"] = email
-	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) //convert uint to string of base 10
+	var userData = UserData{
+		firstName: firstName,
+		lastName:  lastName,
+		email:     email,
+		numberOfTickets:   userTickets,
+	}
+
 
 	bookings = append(bookings, userData)
 	fmt.Printf("List of bookings is %v \n" ,bookings)
