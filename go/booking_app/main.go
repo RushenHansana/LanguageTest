@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt" //format package
-	"strings"
+	"strconv"
+	
 
 	//importing the helper package
 	"booking-app/helper"
@@ -13,7 +14,7 @@ const conferenceTickets int = 50
 
 var conferenceName = "Go Conference"
 var remainingTickets uint = 50
-var bookings = []string{}
+var bookings = make([]map[string]string, 0) //initialize an empty slice of map
 
 // which line executes starts
 func main() {
@@ -76,9 +77,7 @@ func getFirstNames() []string {
 	firstNames := []string{}
 
 	for _, booking := range bookings {
-		var names = strings.Fields(booking)
-		fmt.Printf("The first name of the booking is %v \n", names[0])
-		firstNames = append(firstNames, names[0])
+		firstNames = append(firstNames, booking["firstName"])
 	}
 
 	return firstNames
@@ -103,7 +102,16 @@ func getUserInput() (string, string, string, uint) {
 func bookTickets(userTickets uint, firstName string, lastName string, email string) {
 
 	remainingTickets = remainingTickets - userTickets
-	bookings = append(bookings, firstName+" "+lastName)
+
+	//create a map for a user we cannot use mixed data types in a map
+	var userData = make(map[string]string)
+	userData["firstName"] = firstName
+	userData["lastName"] = lastName
+	userData["email"] = email
+	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) //convert uint to string of base 10
+
+	bookings = append(bookings, userData)
+	fmt.Printf("List of bookings is %v \n" ,bookings)
 
 	fmt.Printf("Thank you %v %v, you have successfully booked %v tickets for the %v conference.You will recieve confirmation at %v \n", firstName, lastName, userTickets, conferenceName, email)
 	fmt.Printf("We have %v tickets remaining \n", remainingTickets)
